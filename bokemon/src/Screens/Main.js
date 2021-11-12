@@ -85,6 +85,8 @@ function Main() {
     setSearchQuery(event.target.value);
   };
 
+  console.log("111", 111);
+
   return (
     <Box display="flex" alignItems="center" flexDirection="column" padding="54px">
       <Typography variant="h3" component="div" style={{ margin: 66, fontSize: "2.5rem" }}>
@@ -101,7 +103,11 @@ function Main() {
           style={{ width: "100%" }}
         />
       </Box>
-      {bokemonsData.length ? <BokemonList bokemons={bokemonsData} /> : null}
+      {bokemonsData.length ? (
+        <BokemonList
+          bokemons={bokemonsData.filter((bokemon) => bokemon.name.includes(searchQuery))}
+        />
+      ) : null}
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={!bokemonsData.length}
