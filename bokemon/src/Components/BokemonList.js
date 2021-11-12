@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CardMedia, Grid, Card, CardContent, Typography, CardActionArea } from "@mui/material/";
 import BackgroundImage from "../Assets/favicon-50.png"; // Import using relative path
 import { makeStyles } from "../Helpers/Styles";
+import DetailsDialog from "./DetailsDialog";
+import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -14,44 +17,62 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 export default function CustomImageList({ bokemons }) {
   const classes = useStyles();
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [currentPokemon, setCurrentPokemon] = useState({});
 
-  const handleOnDetailsClick = (item) => {
-    setOpenDetailsDialog(true);
-    setCurrentPokemon(item);
-  };
+  const [genders, setGenders] = useState([]);
 
-  console.log("bokemons", bokemons);
+  useEffect(() => {
+    axios.get(`https://pokeapi.co/api/v2/gender/1`).then((g) => {
+      setGenders((prev) => [
+        ...prev,
+        ...g.data.pokemon_species_details.map((el) => ({
+          name: el.pokemon_species.name,
+          gender: "Female",
+        })),
+      ]);
+    });
+    axios.get(`https://pokeapi.co/api/v2/gender/2`).then((g) => {
+      setGenders((prev) => [
+        ...prev,
+        ...g.data.pokemon_species_details.map((el) => ({
+          name: el.pokemon_species.name,
+          gender: "Male",
+        })),
+      ]);
+    });
+    axios.get(`https://pokeapi.co/api/v2/gender/3`).then((g) => {
+      setGenders((prev) => [
+        ...prev,
+        ...g.data.pokemon_species_details.map((el) => ({
+          name: el.pokemon_species.name,
+          gender: "Genderless",
+        })),
+      ]);
+    });
+    return () => {
+      setGenders([]);
+    };
+  }, []);
+
+  const handleOnDetailsClick = (item) => {
+    setCurrentPokemon(item);
+    setOpenDetailsDialog(true);
+  };
 
   return (
     <Grid container spacing={2}>
       {bokemons.map((item, i) => (
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
           <Card sx={{ minWidth: 275 }}>
-            <CardActionArea onClick={(item) => handleOnDetailsClick(item)}>
+            <CardActionArea onClick={() => handleOnDetailsClick(item)}>
               <CardMedia component="img" height="240" image={item.image} alt={item.name} />
               <CardContent
                 className={classes.cardContent}
                 style={{
-                  backgroundColor:
-                    i % 6 === 0
-                      ? "#4FC1A5"
-                      : i % 6 === 4
-                      ? "#F7786B"
-                      : i % 6 === 3
-                      ? "#58AAF6"
-                      : i % 6 === 2
-                      ? "#FFCE4B"
-                      : i % 6 === 1
-                      ? "#7C538C"
-                      : "#B1736C",
+                  backgroundColor: item.color,
                 }}
               >
                 <Typography variant="h5" component="div" color="white">
@@ -65,6 +86,14 @@ export default function CustomImageList({ bokemons }) {
           </Card>
         </Grid>
       ))}
+      {currentPokemon.name && (
+        <DetailsDialog
+          open={openDetailsDialog}
+          setOpen={setOpenDetailsDialog}
+          currentPokemon={currentPokemon}
+          genders={genders}
+        />
+      )}
     </Grid>
   );
 }
