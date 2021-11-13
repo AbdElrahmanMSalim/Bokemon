@@ -1,23 +1,23 @@
 import React from "react";
 import Main from "./Screens/Main";
 import Providers from "./Factories/Providers";
-import BackgroundImage from "./Assets/favicon-50.png"; // Import using relative path
-import { Box } from "@mui/material";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./Components/PrivateRoute";
+import Signup from "./Components/Signup";
+import Login from "./Components/Login";
 
 function App(props) {
   return (
     <Providers>
-      <Box
-        style={{
-          background: `url(${BackgroundImage}) no-repeat`,
-          backgroundPosition: "122% -3%",
-          backgroundColor: "snow",
-          backgroundSize: "contain",
-          height: "100vh",
-        }}
-      >
-        <Main />
-      </Box>
+      <Router>
+        <Routes>
+          <Route exact path="/" element={<PrivateRoute />}>
+            <Route exact path="/" element={<Main />} />
+          </Route>
+          <Route path="signup" element={<Signup />} />
+          <Route path="login" element={<Login />} />
+        </Routes>
+      </Router>
     </Providers>
   );
 }

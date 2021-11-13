@@ -11,6 +11,7 @@ import PropTypes from "prop-types";
 // Components
 
 // Factories
+import { AuthProvider } from "../Factories/AuthContext";
 
 // Screens
 
@@ -52,7 +53,11 @@ function Providers(props) {
   // Other
 
   // Component Render
-  return <SnackbarProvider maxSnack={5}>{props.children}</SnackbarProvider>;
+  return (
+    <AuthProvider>
+      <SnackbarProvider maxSnack={5}>{props.children}</SnackbarProvider>
+    </AuthProvider>
+  );
 }
 
 Providers.propTypes = {
