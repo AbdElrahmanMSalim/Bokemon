@@ -10,7 +10,7 @@ import Login from "./Components/Login";
 import GlobalStateProvider from "@morefaie/react-useglobalstate";
 
 const initialGlobalState = {
-  bokemonsData: { data: [] },
+  bokemonsData: { data: [], favorites: [] },
 };
 
 function App(props) {

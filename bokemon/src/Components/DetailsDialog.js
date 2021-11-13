@@ -84,8 +84,6 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
     setExpanded(isExpanded ? panel : false);
   };
 
-  console.log("currentPokemon", currentPokemon);
-
   const data = {
     labels: currentPokemon.stats.map((el) => capitalizeFirstLetter(el.stat.name)),
     datasets: [

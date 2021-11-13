@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { CardMedia, Grid, Card, CardContent, Typography, CardActionArea } from "@mui/material/";
+import {
+  CardMedia,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  CardActionArea,
+  IconButton,
+  Typography,
+} from "@mui/material/";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
 import BackgroundImage from "../Assets/favicon-50.png"; // Import using relative path
 import { makeStyles } from "../Helpers/Styles";
 import DetailsDialog from "./DetailsDialog";
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
 import axios from "axios";
+import { useGlobalState } from "@morefaie/react-useglobalstate";
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -14,14 +26,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: "no-repeat",
     backgroundPosition: "107% -14px",
     backgroundColor: "rgba(255, 255, 255,)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 }));
 
 export default function CustomImageList({ bokemons }) {
   const classes = useStyles();
+  const [favorites, setFavorites] = useGlobalState("bokemonsData.favorites");
+
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const [currentPokemon, setCurrentPokemon] = useState({});
-
   const [genders, setGenders] = useState([]);
 
   useEffect(() => {
@@ -62,6 +78,14 @@ export default function CustomImageList({ bokemons }) {
     setOpenDetailsDialog(true);
   };
 
+  const handleAddToFavorites = (item) => {
+    setFavorites((prev) => [...prev, item]);
+  };
+
+  const handleRemoveFromFavorites = (item) => {
+    setFavorites((prev) => prev.filter((el) => el.id !== item.id));
+  };
+
   return (
     <Grid container spacing={2}>
       {bokemons.map((item, i) => (
@@ -69,20 +93,40 @@ export default function CustomImageList({ bokemons }) {
           <Card sx={{ minWidth: 275 }}>
             <CardActionArea onClick={() => handleOnDetailsClick(item)}>
               <CardMedia component="img" height="240" image={item.image} alt={item.name} />
-              <CardContent
-                className={classes.cardContent}
-                style={{
-                  backgroundColor: item.color,
-                }}
-              >
+            </CardActionArea>
+            <CardContent
+              className={classes.cardContent}
+              style={{
+                backgroundColor: item.color,
+              }}
+            >
+              <Box>
                 <Typography variant="h5" component="div" color="white">
                   {capitalizeFirstLetter(item.name)}
                 </Typography>
                 <Typography variant="subtitle1" component="div" color="white">
                   {capitalizeFirstLetter(item.type)}
                 </Typography>
-              </CardContent>
-            </CardActionArea>
+              </Box>
+
+              {favorites.some((el) => el.id === item.id) ? (
+                <IconButton
+                  sx={{ color: "white" }}
+                  aria-label={`star ${item.title}`}
+                  onClick={() => handleRemoveFromFavorites(item)}
+                >
+                  <StarIcon />
+                </IconButton>
+              ) : (
+                <IconButton
+                  sx={{ color: "white" }}
+                  aria-label={`star ${item.title}`}
+                  onClick={() => handleAddToFavorites(item)}
+                >
+                  <StarBorderIcon />
+                </IconButton>
+              )}
+            </CardContent>
           </Card>
         </Grid>
       ))}

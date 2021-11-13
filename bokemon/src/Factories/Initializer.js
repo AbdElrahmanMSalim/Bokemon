@@ -38,6 +38,7 @@ const Initializer = ({ children }) => {
 
   // Global State Hooks
   const [bokemonsData, setBokemonsData] = useGlobalState("bokemonsData.data");
+  const [favorites, setFavorites] = useGlobalState("bokemonsData.favorites");
 
   // State Hooks
   const [loaded, setLoaded] = useState(false);
@@ -45,9 +46,11 @@ const Initializer = ({ children }) => {
   // Effect Hooks
   useEffect(() => {
     try {
-      let data;
+      let data, fav;
       data = JSON.parse(localStorage.getItem("bokemonsData")) || {};
+      fav = JSON.parse(localStorage.getItem("favorites")) || {};
       if (data.length === 150) setBokemonsData(data);
+      if (fav.length) setFavorites(fav);
       setLoaded(true);
     } catch (e) {
       console.log("e", e);

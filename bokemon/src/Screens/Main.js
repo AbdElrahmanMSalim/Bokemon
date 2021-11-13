@@ -17,6 +17,7 @@ function Main() {
   const [searchQuery, setSearchQuery] = useState("");
   const [bokemonsPromises, setBokemonsPromises] = useState([]);
   const [bokemonsData, setBokemonsData] = useGlobalState("bokemonsData.data");
+  const [favorites, setFavorites] = useGlobalState("bokemonsData.favorites");
   const [error, setError] = useState("");
 
   const { currentUser, logout } = useAuth();
@@ -102,6 +103,8 @@ function Main() {
 
     try {
       await logout();
+      localStorage.removeItem("bokemonsData");
+      setBokemonsData([]);
       navigate("/login", { replace: true });
     } catch {
       setError("Failed to log out");
@@ -129,13 +132,13 @@ function Main() {
         </Typography>
         <Box display="flex" alignItems="center" justifyContent="center">
           {currentUser.email && (
-            <Button onClick={handleLoginClick} variant="contained" style={{ margin: 8 }}>
+            <Button onClick={handleLogout} variant="contained" style={{ margin: 8 }}>
               Sign out
             </Button>
           )}
 
           {!currentUser.email && (
-            <Button onClick={handleLogout} style={{ marginTop: 8 }}>
+            <Button onClick={handleLoginClick} style={{ marginTop: 8 }}>
               Sign in
             </Button>
           )}
@@ -145,6 +148,7 @@ function Main() {
         <Typography variant="h3" component="div" style={{ margin: 66, fontSize: "2.5rem" }}>
           What pokemon are you looking for?
         </Typography>
+
         <Box style={{ display: "flex", alignItems: "flex-end", padding: "24px", width: "100%" }}>
           <SearchIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
           <TextField

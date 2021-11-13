@@ -38,13 +38,15 @@ const Subscribers = ({ children }) => {
 
   // Global State Hooks
   const [bokemonsData] = useGlobalState("bokemonsData.data");
+  const [favorites] = useGlobalState("bokemonsData.favorites");
 
   // State Hooks
 
   // Effect Hooks
   useEffect(() => {
     localStorage.setItem("bokemonsData", JSON.stringify(bokemonsData));
-  }, [bokemonsData]);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [bokemonsData, favorites]);
 
   // Other Hooks
 

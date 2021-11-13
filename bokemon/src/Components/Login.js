@@ -14,9 +14,6 @@ export default function Login() {
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
-    console.log("emailRef", email);
-    console.log("passwordRef", password);
-
     try {
       setError("");
       setLoading(true);
@@ -37,8 +34,6 @@ export default function Login() {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   };
-
-  console.log("error", error);
 
   return (
     <Box
@@ -68,6 +63,7 @@ export default function Login() {
         id="outlined-basic"
         label="Email"
         variant="outlined"
+        autoComplete="email"
         style={{ margin: 8 }}
         value={email}
         onChange={handleEmailChange}
