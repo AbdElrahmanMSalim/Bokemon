@@ -9,14 +9,14 @@ import { useSnackbar } from "notistack";
 import BackgroundImage from "../Assets/favicon-50.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Factories/AuthContext";
+import { useGlobalState } from "@morefaie/react-useglobalstate";
 
 import axios from "axios";
 
 function Main() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [bokemons, setBokemons] = useState({});
   const [bokemonsPromises, setBokemonsPromises] = useState([]);
-  const [bokemonsData, setBokemonsData] = useState([]);
+  const [bokemonsData, setBokemonsData] = useGlobalState("bokemonsData.data");
   const [error, setError] = useState("");
 
   const { currentUser, logout } = useAuth();
@@ -26,66 +26,67 @@ function Main() {
   const getAllBokemons = useGetAllBokemons();
 
   useEffect(() => {
-    getAllBokemons()
-      .then((bokemons) => {
-        setBokemons(bokemons);
-        const data = [];
-        bokemons.results.map((bokemon) => {
-          data.push(axios.get(bokemon.url));
-        });
-        setBokemonsPromises(data);
-      })
-      .catch((errors) => {
-        console.log("errors", errors);
-        errors.forEach((e) => {
-          enqueueSnackbar(e, {
-            variant: "error",
-            autoHideDuration: 3000,
+    bokemonsData.length !== 150 &&
+      getAllBokemons()
+        .then((bokemons) => {
+          const data = [];
+          bokemons.results.map((bokemon) => {
+            data.push(axios.get(bokemon.url));
+          });
+          setBokemonsPromises(data);
+        })
+        .catch((errors) => {
+          console.log("errors", errors);
+          errors.forEach((e) => {
+            enqueueSnackbar(e, {
+              variant: "error",
+              autoHideDuration: 3000,
+            });
           });
         });
-      });
   }, []);
 
   useEffect(() => {
-    axios
-      .all(bokemonsPromises)
-      .then((responses) => {
-        setBokemonsData((prev) =>
-          responses.map((response, i) => {
-            const { data } = response;
-            return {
-              name: data.name,
-              id: data.id,
-              image: data.sprites["front_default"],
-              type: data.types.map((type) => type.type.name).join(", "),
-              ability: data.abilities.map((ability) => ability.ability.name).join(","),
-              species: data.species,
-              height: data.height,
-              weight: data.weight,
-              abilities: data.abilities,
-              stats: data.stats,
-              color:
-                i % 6 === 0
-                  ? "#4FC1A5"
-                  : i % 6 === 4
-                  ? "#F7786B"
-                  : i % 6 === 3
-                  ? "#58AAF6"
-                  : i % 6 === 2
-                  ? "#FFCE4B"
-                  : i % 6 === 1
-                  ? "#7C538C"
-                  : "#B1736C",
-              moves: data.moves
-                .map((move) => move.move.name)
-                .slice(0, 10)
-                .join(", "),
-            };
-          })
-        );
-        // use/access the results
-      })
-      .catch((errors) => {});
+    bokemonsData.length !== 150 &&
+      axios
+        .all(bokemonsPromises)
+        .then((responses) => {
+          setBokemonsData((prev) =>
+            responses.map((response, i) => {
+              const { data } = response;
+              return {
+                name: data.name,
+                id: data.id,
+                image: data.sprites["front_default"],
+                type: data.types.map((type) => type.type.name).join(", "),
+                ability: data.abilities.map((ability) => ability.ability.name).join(","),
+                species: data.species,
+                height: data.height,
+                weight: data.weight,
+                abilities: data.abilities,
+                stats: data.stats,
+                color:
+                  i % 6 === 0
+                    ? "#4FC1A5"
+                    : i % 6 === 4
+                    ? "#F7786B"
+                    : i % 6 === 3
+                    ? "#58AAF6"
+                    : i % 6 === 2
+                    ? "#FFCE4B"
+                    : i % 6 === 1
+                    ? "#7C538C"
+                    : "#B1736C",
+                moves: data.moves
+                  .map((move) => move.move.name)
+                  .slice(0, 10)
+                  .join(", "),
+              };
+            })
+          );
+          // use/access the results
+        })
+        .catch((errors) => {});
   }, [bokemonsPromises]);
 
   const handleSearchChange = (event) => {
@@ -93,8 +94,6 @@ function Main() {
   };
 
   const handleLoginClick = () => {
-    console.log("111", 111);
-
     navigate("/login");
   };
 
