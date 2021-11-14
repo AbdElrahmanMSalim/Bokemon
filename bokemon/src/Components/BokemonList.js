@@ -9,12 +9,15 @@ import {
   IconButton,
   Typography,
 } from "@mui/material/";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import BackgroundImage from "../Assets/favicon-50.png"; // Import using relative path
 import { makeStyles } from "../Helpers/Styles";
 import DetailsDialog from "./DetailsDialog";
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
+import Player from "./Player";
+
 import axios from "axios";
 import { useGlobalState } from "@morefaie/react-useglobalstate";
 
@@ -86,6 +89,11 @@ export default function CustomImageList({ bokemons }) {
     setFavorites((prev) => prev.filter((el) => el.id !== item.id));
   };
 
+  const start = (id) => {
+    let audio = new Audio(`cries/${id}.ogg`);
+    audio.play();
+  };
+
   return (
     <Grid container spacing={2}>
       {bokemons.map((item, i) => (
@@ -108,6 +116,14 @@ export default function CustomImageList({ bokemons }) {
                   {capitalizeFirstLetter(item.type)}
                 </Typography>
               </Box>
+
+              <IconButton
+                sx={{ color: "white" }}
+                aria-label={`star ${item.title}`}
+                onClick={() => start(item.id)}
+              >
+                <VolumeUpIcon />
+              </IconButton>
 
               {favorites.some((el) => el.id === item.id) ? (
                 <IconButton
