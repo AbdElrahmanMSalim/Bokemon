@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Main from "./Screens/Main";
 import Providers from "./Factories/Providers";
 import Subscribers from "./Factories/Subscribers";

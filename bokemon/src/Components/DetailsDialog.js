@@ -219,12 +219,6 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
           </Card>
           {/* <DialogContentText>Details:</DialogContentText> */}
         </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleClose}>Subscribe</Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

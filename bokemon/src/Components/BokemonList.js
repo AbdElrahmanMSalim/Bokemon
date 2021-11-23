@@ -16,7 +16,6 @@ import BackgroundImage from "../Assets/favicon-50.png"; // Import using relative
 import { makeStyles } from "../Helpers/Styles";
 import DetailsDialog from "./DetailsDialog";
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
-import Player from "./Player";
 
 import axios from "axios";
 import { useGlobalState } from "@morefaie/react-useglobalstate";
@@ -35,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomImageList({ bokemons }) {
+export default function BokemonList({ bokemons }) {
   const classes = useStyles();
   const [favorites, setFavorites] = useGlobalState("bokemonsData.favorites");
 
