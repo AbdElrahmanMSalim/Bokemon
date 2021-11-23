@@ -1,6 +1,6 @@
 <template>
   <div class="cards">
-    <div v-for="bokemon in allBokemonsData" :key="bokemon.id">
+    <div v-for="bokemon in filteredBokemons" :key="bokemon.id">
       <Card :bokemon="bokemon" />
     </div>
   </div>
@@ -19,12 +19,12 @@ export default {
   methods: { ...mapActions(["getAllBokemons"]) },
   computed: {
     ...mapGetters(["allBokemonsData"]),
-    //   filteredBokemons: function () {
-    //     var self = this;
-    //     return self.allBokemonsData.filter(function (user) {
-    //       return user.name.indexOf(self.searchQuery) !== -1;
-    //     });
-    //   },
+    filteredBokemons: function () {
+      var self = this;
+      return self.allBokemonsData.filter(function (user) {
+        return user.name.indexOf(self.searchQuery) !== -1;
+      });
+    },
   },
   created() {
     this.getAllBokemons();
