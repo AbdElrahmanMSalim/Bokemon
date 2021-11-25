@@ -5,9 +5,11 @@ export default createStore({
   state: {
     bokemonsData: [],
     favorites: [],
+    genders: [],
   },
   mutations: {
     setBokemonsData: (state, bokemons) => (state.bokemonsData = bokemons),
+    setGenders: (state, genders) => (state.genders = genders),
   },
   actions: {
     async getAllBokemons({ commit }) {
@@ -54,9 +56,40 @@ export default createStore({
       });
       commit("setBokemonsData", mappedData);
     },
+    async getAllGenders({ commit }) {
+      const femalesResponse = await axios.get(
+        `https://pokeapi.co/api/v2/gender/1`
+      );
+      const females = femalesResponse.data.pokemon_species_details.map(
+        (el) => ({
+          name: el.pokemon_species.name,
+          gender: "Female",
+        })
+      );
+      const malesResponse = await axios.get(
+        `https://pokeapi.co/api/v2/gender/2`
+      );
+      const males = malesResponse.data.pokemon_species_details.map((el) => ({
+        name: el.pokemon_species.name,
+        gender: "Female",
+      }));
+
+      const genderlessResponse = await axios.get(
+        `https://pokeapi.co/api/v2/gender/3`
+      );
+      const genderless = genderlessResponse.data.pokemon_species_details.map(
+        (el) => ({
+          name: el.pokemon_species.name,
+          gender: "Genderless",
+        })
+      );
+
+      commit("setGenders", [...females, ...males, ...genderless]);
+    },
   },
   getters: {
     allBokemonsData: (state) => state.bokemonsData,
+    genders: (state) => state.genders,
   },
 
   modules: {},

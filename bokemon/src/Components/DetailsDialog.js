@@ -39,13 +39,21 @@ const useStyles = makeStyles((theme) => ({
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <Draggable
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
     </Draggable>
   );
 }
 
-export default function DetailsDialog({ currentPokemon, open, setOpen, genders }) {
+export default function DetailsDialog({
+  currentPokemon,
+  open,
+  setOpen,
+  genders,
+}) {
   const classes = useStyles();
 
   const [gender, setGender] = useState({});
@@ -58,7 +66,9 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
 
   useEffect(() => {
     if (open) {
-      const found = genders.find((gender) => gender.name === currentPokemon.name);
+      const found = genders.find(
+        (gender) => gender.name === currentPokemon.name
+      );
       setGender(found);
     }
     return () => {
@@ -85,7 +95,9 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
   };
 
   const data = {
-    labels: currentPokemon.stats.map((el) => capitalizeFirstLetter(el.stat.name)),
+    labels: currentPokemon.stats.map((el) =>
+      capitalizeFirstLetter(el.stat.name)
+    ),
     datasets: [
       {
         label: currentPokemon.name,
@@ -112,7 +124,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
         maxWidth={"md"}
       >
         <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
-          <Typography variant="h4" component="div" style={{ color: currentPokemon.color }}>
+          <Typography
+            variant="h4"
+            component="div"
+            style={{ color: currentPokemon.color }}
+          >
             {currentPokemon.id}
             {". "}
             {capitalizeFirstLetter(currentPokemon.name)}
@@ -145,7 +161,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
               <Accordion
                 expanded={expanded === "panel1"}
                 onChange={handleChange("panel1")}
-                style={{ backgroundColor: "inherit", color: "white", padding: 4 }}
+                style={{
+                  backgroundColor: "inherit",
+                  color: "white",
+                  padding: 4,
+                }}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -158,7 +178,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
                 </AccordionSummary>
                 <AccordionDetails>
                   {gender.name && (
-                    <Typography variant="subtitle1" component="div" color="white">
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      color="white"
+                    >
                       Gender: {capitalizeFirstLetter(gender.gender)}
                     </Typography>
                   )}
@@ -169,7 +193,8 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
                     Weight: {currentPokemon.weight} hectograms
                   </Typography>
                   <Typography variant="subtitle1" component="div" color="white">
-                    Species: {capitalizeFirstLetter(currentPokemon.species.name)}
+                    Species:{" "}
+                    {capitalizeFirstLetter(currentPokemon.species.name)}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
@@ -177,7 +202,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
               <Accordion
                 expanded={expanded === "panel2"}
                 onChange={handleChange("panel2")}
-                style={{ backgroundColor: "inherit", color: "white", padding: 4 }}
+                style={{
+                  backgroundColor: "inherit",
+                  color: "white",
+                  padding: 4,
+                }}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
@@ -190,7 +219,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
                 </AccordionSummary>
                 <AccordionDetails>
                   {currentPokemon.abilities.map(({ ability }) => (
-                    <Typography variant="subtitle1" component="div" color="white">
+                    <Typography
+                      variant="subtitle1"
+                      component="div"
+                      color="white"
+                    >
                       {capitalizeFirstLetter(ability.name)}
                     </Typography>
                   ))}
@@ -200,7 +233,11 @@ export default function DetailsDialog({ currentPokemon, open, setOpen, genders }
               <Accordion
                 expanded={expanded === "panel3"}
                 onChange={handleChange("panel3")}
-                style={{ backgroundColor: "inherit", color: "white", padding: 4 }}
+                style={{
+                  backgroundColor: "inherit",
+                  color: "white",
+                  padding: 4,
+                }}
               >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}

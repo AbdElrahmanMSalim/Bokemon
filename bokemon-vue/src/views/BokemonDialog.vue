@@ -7,12 +7,17 @@
 
       <img :src="bokemon.image" :alt="bokemon.name" class="img" />
       <h2>Yeah, that's me :P</h2>
-      <button class="dialogBtn" @click="show = !show">Show My Abilities</button>
+      <button class="dialogBtn" @click="showAbilities = !showAbilities">
+        Show my abilities
+      </button>
+      <button class="dialogBtn" @click="showMoreInfo = !showMoreInfo">
+        Show more info about me
+      </button>
     </div>
 
     <transition name="fade">
       <div
-        v-if="show"
+        v-if="showAbilities"
         class="insideContainer"
         :style="{ backgroundColor: bokemon.color }"
       >
@@ -25,10 +30,48 @@
           v-for="ability in bokemon.abilities"
         >
           <h3>
-            {{ capitalizeFirstLetter(ability.name) }}
+            {{ ability.name }}
           </h3>
 
           <h4>{{ ability.effect }}</h4>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="fade">
+      <div
+        v-if="showMoreInfo"
+        class="insideContainer"
+        :style="{ backgroundColor: bokemon.color }"
+      >
+        <h1>More about me</h1>
+        <h2>Let's go</h2>
+
+        <div class="info">
+          <h3>
+            Gender:
+            <span :style="{ color: '#FAEBD7' }">
+              {{ gender }}
+            </span>
+          </h3>
+          <h3>
+            Height:
+            <span :style="{ color: '#FAEBD7' }">
+              {{ bokemon.height }} decimetres
+            </span>
+          </h3>
+          <h3>
+            Weight:
+            <span :style="{ color: '#FAEBD7' }">
+              {{ bokemon.weight }} hectograms
+            </span>
+          </h3>
+          <h3>
+            Species:
+            <span :style="{ color: '#FAEBD7' }">
+              {{ bokemon.species?.name }}
+            </span>
+          </h3>
         </div>
       </div>
     </transition>
@@ -42,9 +85,14 @@ import axios from "axios";
 
 export default {
   name: "BokemonDialog",
-  computed: mapGetters(["allBokemonsData"]),
+  computed: mapGetters(["allBokemonsData", "genders"]),
   data() {
-    return { bokemon: { abilities: [] }, show: true };
+    return {
+      gender: "",
+      bokemon: { abilities: [] },
+      showAbilities: true,
+      showMoreInfo: true,
+    };
   },
   methods: {
     capitalizeFirstLetter,
@@ -53,6 +101,8 @@ export default {
     const bokemon = this.allBokemonsData.find(
       (el) => el.id == this.$route.query.id
     );
+
+    this.bokemon = bokemon;
     bokemon.abilities.map(({ ability }) => {
       axios.get(ability.url).then((res) => {
         const effect = res.data.effect_entries.filter(
@@ -70,6 +120,10 @@ export default {
         };
       });
     });
+    const gender = this.genders.find((gender) => gender.name === bokemon.name);
+
+    this.gender = gender.gender;
+    console.log("gender", this.gender);
   },
 };
 </script>
@@ -109,15 +163,22 @@ export default {
   width: 209px;
 }
 
+.info {
+  text-align: left;
+  margin-top: 16px;
+}
+
 .abilities {
   margin-right: auto;
 }
+
 .container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
 }
+
 .insideContainer {
   height: 100%;
   width: 350px;

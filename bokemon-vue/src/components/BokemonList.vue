@@ -39,7 +39,6 @@ export default {
     ...mapGetters(["allBokemonsData"]),
     filteredBokemons: function () {
       var self = this;
-      console.log(this.allBokemonsData);
       return self.allBokemonsData.filter(function (user) {
         return user.name.indexOf(self.searchQuery) !== -1;
       });

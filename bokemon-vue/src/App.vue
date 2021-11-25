@@ -4,17 +4,19 @@
     <router-link class="btn" to="/login">Login</router-link> |
     <router-link class="btn" to="/signup">Sign up</router-link>
   </div>
-  <router-view v-if="$store.state.bokemonsData.length" />
+  <router-view
+    v-if="$store.state.bokemonsData.length && $store.state.genders.length"
+  />
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
-  methods: mapActions(["getAllBokemons"]),
-  computed: mapGetters(["allBokemonsData"]),
+  methods: mapActions(["getAllBokemons", "getAllGenders"]),
   created() {
     this.getAllBokemons();
+    this.getAllGenders();
   },
 };
 </script>
