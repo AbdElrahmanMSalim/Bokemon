@@ -1,7 +1,7 @@
 <template>
   <div class="cards">
     <div v-for="bokemon in filteredBokemons" :key="bokemon.id">
-      <Card :bokemon="bokemon" />
+      <Card :bokemon="bokemon" class="bokemon" @click="openDialog(bokemon)" />
     </div>
   </div>
 </template>
@@ -15,24 +15,50 @@ export default {
   props: {
     searchQuery: String,
   },
+  data() {
+    return {
+      openBokemonDialog: true,
+    };
+  },
   components: { Card },
-  methods: { ...mapActions(["getAllBokemons"]) },
+
+  methods: {
+    openDialog(bokemon) {
+      this.openBokemonDialog = true;
+
+      this.$router.push({
+        name: "BokemonDialog",
+        query: {
+          id: bokemon.id,
+        },
+      });
+    },
+  },
+
   computed: {
     ...mapGetters(["allBokemonsData"]),
     filteredBokemons: function () {
       var self = this;
+      console.log(this.allBokemonsData);
       return self.allBokemonsData.filter(function (user) {
         return user.name.indexOf(self.searchQuery) !== -1;
       });
     },
   },
-  created() {
-    this.getAllBokemons();
-  },
 };
 </script>
 
 <style>
+.routerLink {
+  text-decoration: none;
+}
+
+.bokemon:hover {
+  opacity: 95%;
+  transform: scale(1.02);
+  cursor: pointer;
+}
+
 .cards {
   max-width: 1200px;
   margin: 0 auto;

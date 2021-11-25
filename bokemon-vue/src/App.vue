@@ -4,8 +4,20 @@
     <router-link class="btn" to="/login">Login</router-link> |
     <router-link class="btn" to="/signup">Sign up</router-link>
   </div>
-  <router-view />
+  <router-view v-if="$store.state.bokemonsData.length" />
 </template>
+
+<script>
+import { mapActions, mapGetters } from "vuex";
+
+export default {
+  methods: mapActions(["getAllBokemons"]),
+  computed: mapGetters(["allBokemonsData"]),
+  created() {
+    this.getAllBokemons();
+  },
+};
+</script>
 
 <style>
 body {

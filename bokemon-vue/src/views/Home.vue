@@ -8,6 +8,7 @@
         v-model="searchQuery"
         name="searchQuery"
         placeholder="Search for bokemons"
+        :style="{ maxWidth: '1200px' }"
       />
     </div>
     <BokemonList :searchQuery="searchQuery" />
