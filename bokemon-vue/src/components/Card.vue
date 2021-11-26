@@ -29,7 +29,6 @@ export default {
 .cardContainer {
   padding: 24px;
   border-radius: 8px;
-  padding: 1rem;
 }
 
 .cardContent {

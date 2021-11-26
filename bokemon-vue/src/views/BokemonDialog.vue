@@ -13,6 +13,9 @@
       <button class="dialogBtn" @click="showMoreInfo = !showMoreInfo">
         Show more info about me
       </button>
+      <button class="dialogBtn" @click="showStats = !showStats">
+        Show my statistics
+      </button>
     </div>
 
     <transition name="fade">
@@ -75,24 +78,67 @@
         </div>
       </div>
     </transition>
+
+    <transition name="fade">
+      <div
+        v-if="showStats"
+        class="insideContainer"
+        :style="{ backgroundColor: bokemon.color }"
+      >
+        <h1>My Stats</h1>
+        <h2>Haha</h2>
+
+        <RadarChart :chartData="chartData" />
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
+import { RadarChart } from "vue-chart-3";
 import axios from "axios";
 
 export default {
   name: "BokemonDialog",
-  computed: mapGetters(["allBokemonsData", "genders"]),
+  components: { RadarChart },
   data() {
     return {
       gender: "",
-      bokemon: { abilities: [] },
-      showAbilities: true,
-      showMoreInfo: true,
+      bokemon: { abilities: [], stats: [], name: "" },
+      showAbilities: false,
+      showMoreInfo: false,
+      showStats: true,
     };
+  },
+
+  computed: {
+    ...mapGetters(["allBokemonsData", "genders"]),
+    chartData() {
+      console.log("this.bokemon", this.bokemon);
+
+      return {
+        labels: this.bokemon.stats.map((el) =>
+          capitalizeFirstLetter(el.stat.name)
+        ),
+        datasets: [
+          {
+            label: this.bokemon.name,
+            data: this.bokemon.stats.map((el) => el.base_stat),
+            fill: true,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "white",
+            pointBackgroundColor: "red",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "red",
+            fontColor: "white",
+            scaleFontColor: "#FFFFFF",
+          },
+        ],
+      };
+    },
   },
   methods: {
     capitalizeFirstLetter,
@@ -121,9 +167,7 @@ export default {
       });
     });
     const gender = this.genders.find((gender) => gender.name === bokemon.name);
-
     this.gender = gender.gender;
-    console.log("gender", this.gender);
   },
 };
 </script>

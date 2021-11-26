@@ -46,7 +46,7 @@ export default createStore({
               : i % 6 === 2
               ? "#FFCE4B"
               : i % 6 === 1
-              ? "#7C538C"
+              ? "#b584c8"
               : "#B1736C",
           moves: data.moves
             .map((move) => move.move.name)
