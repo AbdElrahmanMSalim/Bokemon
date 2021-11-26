@@ -5,6 +5,9 @@
       <h2>I am the bokemon number {{ bokemon.id }}</h2>
       <h3>My types are: {{ bokemon.type }}</h3>
 
+      <div class="btn vol" @click="cry">
+        <i class="fas fa-volume-up vol"> </i>
+      </div>
       <img :src="bokemon.image" :alt="bokemon.name" class="img" />
       <h2>Yeah, that's me :P</h2>
       <button class="dialogBtn" @click="showAbilities = !showAbilities">
@@ -116,8 +119,6 @@ export default {
   computed: {
     ...mapGetters(["allBokemonsData", "genders"]),
     chartData() {
-      console.log("this.bokemon", this.bokemon);
-
       return {
         labels: this.bokemon.stats.map((el) =>
           capitalizeFirstLetter(el.stat.name)
@@ -142,6 +143,10 @@ export default {
   },
   methods: {
     capitalizeFirstLetter,
+    cry() {
+      let audio = new Audio(`cries/${this.bokemon.id}.ogg`);
+      audio.play();
+    },
   },
   mounted() {
     const bokemon = this.allBokemonsData.find(
@@ -173,6 +178,13 @@ export default {
 </script>
 
 <style scoped>
+.vol {
+  display: flex;
+  justify-content: flex-end;
+  background: cornsilk;
+  margin: 0;
+}
+
 .dialogBtn {
   padding: 30px;
   margin: 16px;

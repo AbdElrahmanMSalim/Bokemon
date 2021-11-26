@@ -1,8 +1,10 @@
 <template>
   <div class="cardContainer" :style="{ background: bokemon.color }">
     <div class="cardHeading">
-      <h2>{{ capitalizeFirstLetter(bokemon.name) }}</h2>
-      <h4>{{ capitalizeFirstLetter(bokemon.type) }}</h4>
+      <div>
+        <h2>{{ capitalizeFirstLetter(bokemon.name) }}</h2>
+        <h4>{{ capitalizeFirstLetter(bokemon.type) }}</h4>
+      </div>
     </div>
 
     <div class="cardContent">
@@ -13,7 +15,6 @@
 
 <script>
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
-
 export default {
   name: "Card",
   props: {
@@ -26,6 +27,13 @@ export default {
 </script>
 
 <style>
+.cardHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
 .cardContainer {
   padding: 24px;
   border-radius: 8px;
