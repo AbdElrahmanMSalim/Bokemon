@@ -5,8 +5,14 @@
       <h2>I am the bokemon number {{ bokemon.id }}</h2>
       <h3>My types are: {{ bokemon.type }}</h3>
 
-      <div class="btn vol" @click="cry">
-        <i class="fas fa-volume-up vol"> </i>
+      <div class="btns">
+        <div class="btn vol" @click="cry">
+          <i class="fas fa-volume-up vol"> </i>
+        </div>
+        <div class="btn vol" @click="bookmark">
+          <i v-show="!bookmarked" class="far fa-star"></i>
+          <i v-show="bookmarked" class="fas fa-star"></i>
+        </div>
       </div>
       <img :src="bokemon.image" :alt="bokemon.name" class="img" />
       <h2>Yeah, that's me :P</h2>
@@ -102,6 +108,8 @@ import { mapGetters } from "vuex";
 import capitalizeFirstLetter from "../Utils/CapitalizeFirstLetter";
 import { RadarChart } from "vue-chart-3";
 import axios from "axios";
+import { readUserData, writeUserData } from "../firebase/database";
+import { getCurrentUser } from "../firebase/firebase";
 
 export default {
   name: "BokemonDialog",
@@ -113,9 +121,10 @@ export default {
       showAbilities: false,
       showMoreInfo: false,
       showStats: true,
+      user: {},
+      favorites: [],
     };
   },
-
   computed: {
     ...mapGetters(["allBokemonsData", "genders"]),
     chartData() {
@@ -140,12 +149,29 @@ export default {
         ],
       };
     },
+    bookmarked() {
+      return this.favorites.includes(this.bokemon.id);
+    },
   },
   methods: {
     capitalizeFirstLetter,
     cry() {
       let audio = new Audio(`cries/${this.bokemon.id}.ogg`);
       audio.play();
+    },
+    bookmark() {
+      if (this.bookmarked) {
+        writeUserData(
+          this.user.uid,
+          this.user.email,
+          this.favorites.filter((el) => el !== this.bokemon.id)
+        );
+      } else {
+        writeUserData(this.user.uid, this.user.email, [
+          ...this.favorites,
+          this.bokemon.id,
+        ]);
+      }
     },
   },
   mounted() {
@@ -173,6 +199,13 @@ export default {
     });
     const gender = this.genders.find((gender) => gender.name === bokemon.name);
     this.gender = gender.gender;
+
+    getCurrentUser((user) => {
+      this.user = user;
+      readUserData(user.uid, (result) => {
+        this.favorites = result.favorites || [];
+      });
+    });
   },
 };
 </script>
@@ -182,7 +215,10 @@ export default {
   display: flex;
   justify-content: flex-end;
   background: cornsilk;
-  margin: 0;
+}
+
+.btns {
+  display: flex;
 }
 
 .dialogBtn {

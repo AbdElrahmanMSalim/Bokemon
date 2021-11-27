@@ -34,7 +34,7 @@ export default {
       });
     },
   },
-
+  mounted() {},
   computed: {
     ...mapGetters(["allBokemonsData"]),
     filteredBokemons: function () {
