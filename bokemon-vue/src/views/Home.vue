@@ -8,7 +8,6 @@
         v-model="searchQuery"
         name="searchQuery"
         placeholder="Search for bokemons"
-        :style="{ maxWidth: '1200px' }"
       />
     </div>
     <BokemonList :searchQuery="searchQuery" />
@@ -31,7 +30,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .home {
   padding: 24px;
 }
@@ -45,6 +44,7 @@ export default {
   display: block;
 }
 .form-control input {
+  max-width: 1200px;
   width: 95%;
   height: 40px;
   margin: 5px;

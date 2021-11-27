@@ -1,9 +1,16 @@
 <template>
   <div id="nav">
     <router-link class="btn" to="/">Home</router-link> |
-    <router-link class="btn" to="/login">Login</router-link> |
-    <router-link class="btn" to="/signup">Sign up</router-link>
+    <button v-show="user.email" class="btn" @click="signOut">Signout</button>
+    <router-link v-show="!user.email" class="btn" to="/login"
+      >Login</router-link
+    >
+    <span v-show="!user.email">|</span>
+    <router-link v-show="!user.email" class="btn" to="/signup"
+      >Sign up</router-link
+    >
   </div>
+  <h3>{{ user.email }}</h3>
   <router-view
     v-if="$store.state.bokemonsData.length && $store.state.genders.length"
   />
@@ -11,12 +18,29 @@
 
 <script>
 import { mapActions } from "vuex";
+import { getCurrentUser, logout } from "./firebase/firebase";
 
 export default {
-  methods: mapActions(["getAllBokemons", "getAllGenders"]),
+  data() {
+    return { user: {} };
+  },
+  methods: {
+    ...mapActions(["getAllBokemons", "getAllGenders"]),
+    async signOut() {
+      try {
+        await logout();
+        localStorage.removeItem("bokemonsData");
+        this.user = {};
+        this.$router.replace({ path: "/login" });
+      } catch (error) {
+        this.errorMessage = error;
+      }
+    },
+  },
   created() {
     this.getAllBokemons();
     this.getAllGenders();
+    getCurrentUser((user) => (this.user = user));
   },
 };
 </script>
