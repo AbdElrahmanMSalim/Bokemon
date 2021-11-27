@@ -120,7 +120,7 @@ export default {
       bokemon: { abilities: [], stats: [], name: "" },
       showAbilities: false,
       showMoreInfo: false,
-      showStats: true,
+      showStats: false,
       user: {},
       favorites: [],
     };
