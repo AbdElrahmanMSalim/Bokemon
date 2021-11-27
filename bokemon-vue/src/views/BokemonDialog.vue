@@ -160,6 +160,9 @@ export default {
       audio.play();
     },
     bookmark() {
+      if (!this.user?.email) {
+        this.$router.push({ path: "/login" });
+      }
       if (this.bookmarked) {
         writeUserData(
           this.user.uid,
