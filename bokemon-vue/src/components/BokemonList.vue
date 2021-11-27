@@ -53,7 +53,7 @@ export default {
 }
 
 .bokemon:hover {
-  opacity: 95%;
+  opacity: 0.95;
   transform: scale(1.02);
   cursor: pointer;
 }

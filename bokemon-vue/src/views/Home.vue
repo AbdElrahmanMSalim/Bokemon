@@ -50,7 +50,7 @@ export default {
   margin: 5px;
   padding: 3px 7px;
   font-size: 17px;
-  opacity: 85%;
+  opacity: 0.85;
   border: 1px solid rgb(158, 158, 158);
   border-radius: 5px;
 }
